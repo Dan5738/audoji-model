@@ -14,10 +14,10 @@ RUN apt-get update -y && \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set work directory
-WORKDIR /code
+WORKDIR /app
 
 # Copy project
-COPY . /code/
+COPY . /app/
 
 # Install Python dependencies including Whisper
 RUN pip install --no-cache-dir -r requirements.txt
@@ -26,6 +26,5 @@ RUN pip install --no-cache-dir git+https://github.com/openai/whisper.git
 # # Collect static files
 # RUN python manage.py collectstatic --noinput
 
-# Run the application
-# CMD ["daphne", "audojiengine_sm.asgi:application", "--port", "$PORT", "--bind", "0.0.0.0"]
-CMD daphne audojiengine_sm.asgi:application --port $PORT --bind 0.0.0.0
+# Set the entrypoint
+ENTRYPOINT ["python", "creator.py"]
