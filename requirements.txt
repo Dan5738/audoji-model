@@ -17,3 +17,7 @@ pyspellchecker
 python-decouple
 python-dotenv
 python-Levenshtein
+
+
+# torch-2.2.1-cp310-cp310-manylinux1_x86_64.whl
+# nvidia-cusparse-cu12==12.1.0.106
