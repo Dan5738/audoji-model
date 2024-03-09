@@ -1,3 +1,4 @@
+import asyncio
 import whisper
 from decouple import config
 from asgiref.sync import sync_to_async
