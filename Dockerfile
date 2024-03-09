@@ -1,38 +1,28 @@
-# Pull the NVIDIA base image with CUDA and cuDNN
-FROM nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu20.04
+# Use a PyTorch base image with CUDA and cuDNN
+FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary system dependencies and Python 3.10
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    ffmpeg \
-    python3.10 \
-    python3.10-distutils \
-    python3.10-venv \
-    python3-pip && \
-    python3.10 -m pip install --upgrade pip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install software properties common (for add-apt-repository) and ffmpeg
+RUN apt-get update && apt-get install -y software-properties-common ffmpeg
 
-# Update alternatives to prioritize Python 3.10
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
-    update-alternatives --set python3 /usr/bin/python3.10
+# Add deadsnakes PPA for newer Python versions
+RUN add-apt-repository ppa:deadsnakes/ppa
+
+# Install Python 3.10 and pip
+RUN apt-get update && apt-get install -y python3.10 python3-pip
+
+# Update pip
+RUN python3.10 -m pip install --upgrade pip
 
 # Set work directory
 WORKDIR /app
 
-# Copy project
+# Copy your application code
 COPY . /app/
 
-# Install Python dependencies including Whisper
-RUN python3.10 -m pip install --no-cache-dir -r requirements.txt && \
-    python3.10 -m pip install --no-cache-dir git+https://github.com/openai/whisper.git
+# Install Python dependencies from requirements.txt
+RUN python3.10 -m pip install --no-cache-dir -r requirements.txt
 
-# Set the entrypoint
+# The command to run the application
 ENTRYPOINT ["python3.10", "creator.py"]
