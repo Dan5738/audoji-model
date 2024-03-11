@@ -8,6 +8,8 @@ gunicorn
 librosa
 llama-index
 markdown
+more-itertools
+numba
 numpy
 openai
 pandas
@@ -17,7 +19,10 @@ pyspellchecker
 python-decouple
 python-dotenv
 python-Levenshtein
-
+torch
+tqdm
+tiktoken
+triton>=2.0.0,<3;platform_machine=="x86_64" and sys_platform=="linux" or sys_platform=="linux2"
 
 # torch-2.2.1-cp310-cp310-manylinux1_x86_64.whl
 # nvidia-cusparse-cu12==12.1.0.106
