@@ -1,28 +1,39 @@
-# Use a PyTorch base image with CUDA and cuDNN
-FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1 
 
-# Install software properties common (for add-apt-repository) and ffmpeg
-RUN apt-get update && apt-get install -y software-properties-common ffmpeg
+# Install necessary tools
+RUN apt-get update --yes --quiet && DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet --no-install-recommends \
+    software-properties-common \
+    build-essential apt-utils \
+    wget curl vim git ca-certificates kmod \
+    nvidia-driver-525 \
+ && rm -rf /var/lib/apt/lists/*
 
-# Add deadsnakes PPA for newer Python versions
-RUN add-apt-repository ppa:deadsnakes/ppa
+# Install Python 3.10
+RUN add-apt-repository --yes ppa:deadsnakes/ppa && apt-get update --yes --quiet
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet --no-install-recommends \
+    python3.10 \
+    python3.10-dev \
+    python3.10-distutils \
+    python3.10-lib2to3 \
+    python3.10-gdbm \
+    python3.10-tk \
+    python3-pip
 
-# Install Python 3.10 and pip
-RUN apt-get update && apt-get install -y python3.10 python3-pip
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 999 \
+    && update-alternatives --config python3 && ln -s /usr/bin/python3 /usr/bin/python
 
-# Update pip
-RUN python3.10 -m pip install --upgrade pip
+RUN pip install --upgrade pip
 
-# Set work directory
+# Install PyTorch
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+
 WORKDIR /app
-
-# Copy your application code
 COPY . /app/
 
-# Install Python dependencies from requirements.txt
-RUN python3.10 -m pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir git+https://github.com/openai/whisper.git
 
-# The command to run the application
-ENTRYPOINT ["python3.10", "creator.py"]
+# Replace with your application's default command
+CMD ["python3", "creator.py"]
