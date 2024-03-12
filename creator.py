@@ -42,6 +42,7 @@ class AudojiCreator:
             )
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to send transcription result: {e}")
+            logger.info("Expected Code run")
 
 
 def lambda_handler(event, context):
