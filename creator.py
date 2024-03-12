@@ -69,9 +69,9 @@ if __name__ == "__main__":
     import sys
 
     # Example usage with command-line arguments for testing
-    audio_file_url = sys.argv[1] if len(sys.argv) > 1 else config("TEST_AUDIO_FILE_URL")
-    group_name = sys.argv[2] if len(sys.argv) > 2 else config("GROUP_NAME")
-    callback_url = sys.argv[3] if len(sys.argv) > 3 else config("CALLBACK_URL")
+    audio_file_url = sys.argv[1] if len(sys.argv) > 1 else "https://audojistore.s3.amazonaws.com/media/audio_files/Sam-Smith-Man-I-Am.mp3"
+    group_name = sys.argv[2] if len(sys.argv) > 2 else "user_1"
+    callback_url = sys.argv[3] if len(sys.argv) > 3 else "https://example.com"
 
     logger.info(f"This is the audio file url: {audio_file_url}")
     logger.info(f"This is the group name: {group_name}")
