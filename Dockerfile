@@ -33,4 +33,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir git+https://github.com/openai/whisper.git
 
 # Replace with your application's default command
-CMD ["python3", "creator.py"]
+ENTRYPOINT ["python3", "creator.py"]
